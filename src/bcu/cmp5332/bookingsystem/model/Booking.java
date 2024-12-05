@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Booking {
 
-	private static final double BASE_CANCELLATION_FEE = 20.0;
+    private static final double BASE_CANCELLATION_FEE = 20.0; // Base fee for cancellations
 
     private final Customer customer;
     private final Flight flight;
@@ -16,16 +16,17 @@ public class Booking {
         this.bookingDate = bookingDate;
     }
 
-	public double calculateCancellationFee(LocalDate cancellationDate) {
-		long daysToDeparture = cancellationDate.until(flight.getDepartureDate()).getDays();
-		if (daysToDeparture > 14) {
-			return BASE_CANCELLATION_FEE * 0.5; // 50% fee for cancellations >14 days before departure
-		} else if (daysToDeparture > 7) {
-			return BASE_CANCELLATION_FEE; // Full fee for cancellations 7-14 days before departure
-		} else {
-			return BASE_CANCELLATION_FEE * 1.5; // 150% fee for cancellations within 7 days
-		}
-	}
+    // Calculates cancellation fee based on days to departure
+    public double calculateCancellationFee(LocalDate cancellationDate) {
+        long daysToDeparture = cancellationDate.until(flight.getDepartureDate()).getDays();
+        if (daysToDeparture > 14) {
+            return BASE_CANCELLATION_FEE * 0.5; // 50% fee for cancellations >14 days before departure
+        } else if (daysToDeparture > 7) {
+            return BASE_CANCELLATION_FEE; // Full fee for cancellations 7-14 days before departure
+        } else {
+            return BASE_CANCELLATION_FEE * 1.5; // 150% fee for cancellations within 7 days
+        }
+    }
 
     // Getters
     public Customer getCustomer() {
@@ -38,11 +39,6 @@ public class Booking {
 
     public LocalDate getBookingDate() {
         return bookingDate;
-    }
-
-    // Method to calculate the cancellation fee
-    public double calculateCancellationFee() {
-        return CANCELLATION_FEE;
     }
 
     // Booking details

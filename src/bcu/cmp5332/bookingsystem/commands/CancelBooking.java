@@ -6,6 +6,8 @@ import bcu.cmp5332.bookingsystem.model.Customer;
 import bcu.cmp5332.bookingsystem.model.Flight;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
+import java.time.LocalDate;
+
 public class CancelBooking implements Command {
 
     private final int customerId;

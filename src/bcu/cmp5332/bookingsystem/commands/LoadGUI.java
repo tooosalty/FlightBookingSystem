@@ -1,12 +1,10 @@
 package bcu.cmp5332.bookingsystem.commands;
 
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import javax.swing.JFrame;
+import java.time.LocalDate; // Import for LocalDate
 public class LoadGUI implements Command {
 
     @Override
@@ -15,9 +13,9 @@ public class LoadGUI implements Command {
     }
 
     private void createAndShowGUI(FlightBookingSystem fbs) {
-        JFrame frame = new JFrame("Flight Booking System");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+    	JFrame frame = new JFrame("Flight Booking System");
+    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	frame.setSize(800, 600);
 
         // Main panel
         JPanel panel = new JPanel();

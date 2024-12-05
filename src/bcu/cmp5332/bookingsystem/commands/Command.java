@@ -4,6 +4,7 @@ import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
 public interface Command {
+    void execute(FlightBookingSystem fbs) throws FlightBookingSystemException;
 
     public static final String HELP_MESSAGE = "Commands:\n"
         + "\tlistflights                               print all flights\n"
@@ -20,6 +21,5 @@ public interface Command {
         + "\texit                                      exits the program";
 
     
-    public void execute(FlightBookingSystem flightBookingSystem) throws FlightBookingSystemException;
-    
 }
+

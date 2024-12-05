@@ -20,10 +20,13 @@ public class AddBooking implements Command {
 
     @Override
     public void execute(FlightBookingSystem fbs) throws FlightBookingSystemException {
+        // Explicit use of LocalDate
+        LocalDate bookingDate = fbs.getSystemDate();
+
         Customer customer = fbs.getCustomerById(customerId);
         Flight flight = fbs.getFlightById(flightId);
 
-        Booking booking = new Booking(customer, flight, fbs.getSystemDate());
+        Booking booking = new Booking(customer, flight, bookingDate);
         customer.addBooking(booking);
         flight.addPassenger(customer);
 

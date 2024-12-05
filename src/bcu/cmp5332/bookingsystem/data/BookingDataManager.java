@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class BookingDataManager implements DataManager {
 
     private static final String RESOURCE = "./resources/data/bookings.txt";
+    private static final String SEPARATOR = "::"; // Define the SEPARATOR constant
 
     @Override
     public void loadData(FlightBookingSystem fbs) throws IOException, FlightBookingSystemException {

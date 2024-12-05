@@ -1,17 +1,17 @@
 package bcu.cmp5332.bookingsystem.main;
 
 import bcu.cmp5332.bookingsystem.commands.*;
-import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
+import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class CommandParser {
 
-    public static Command parse(String line) throws FlightBookingSystemException {
+    public static Command parse(String line) throws FlightBookingSystemException, IOException {
         String[] parts = line.trim().split(" ", 2);
         String cmd = parts[0].toLowerCase();
 

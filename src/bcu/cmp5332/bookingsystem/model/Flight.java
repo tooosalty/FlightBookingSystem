@@ -15,6 +15,7 @@ public class Flight {
     private String destination;
     private LocalDate departureDate;
     private final Set<Customer> passengers;
+    private int capacity;
 
     private boolean isDeleted = false;
 
@@ -78,6 +79,19 @@ public void setDeleted(boolean deleted) {
 
     public Set<Customer> getPassengers() {
         return passengers;
+    }
+    
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+    
+    public String getDetailsShort() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return "Flight #" + id + " - " + flightNumber + " - " + origin + " to " + destination + " - Departure: " + departureDate.format(formatter);
     }
 
     public String getDetailsLong() {

@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class FlightDataManager implements DataManager {
     
     private final String RESOURCE = "./resources/data/flights.txt";
+    private static final String SEPARATOR = "::";
     
     @Override
     public void loadData(FlightBookingSystem fbs) throws IOException, FlightBookingSystemException {

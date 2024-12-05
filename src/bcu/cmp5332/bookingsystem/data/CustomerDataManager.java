@@ -10,33 +10,25 @@ import java.util.Scanner;
 public class CustomerDataManager implements DataManager {
 
     private static final String RESOURCE = "./resources/data/customers.txt";
+    private static final String SEPARATOR = "::"; // Define SEPARATOR as a constant
 
     @Override
     public void loadData(FlightBookingSystem fbs) throws IOException, FlightBookingSystemException {
         try (Scanner sc = new Scanner(new File(RESOURCE))) {
-            int lineIdx = 1;
-
+            int lineIndex = 1;
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
-                String[] properties = line.split(SEPARATOR, -1);
-
+                String[] properties = line.split(SEPARATOR); // Use SEPARATOR here
                 try {
-                    if (properties.length < 3) {
-                        throw new FlightBookingSystemException("Malformed data on line " + lineIdx);
-                    }
-
                     int id = Integer.parseInt(properties[0]);
                     String name = properties[1];
                     String phone = properties[2];
-
                     Customer customer = new Customer(id, name, phone);
                     fbs.addCustomer(customer);
-
-                } catch (NumberFormatException ex) {
-                    throw new FlightBookingSystemException("Invalid number format on line " + lineIdx + ": " + ex.getMessage());
+                } catch (NumberFormatException e) {
+                    throw new FlightBookingSystemException("Invalid customer ID at line " + lineIndex, e);
                 }
-
-                lineIdx++;
+                lineIndex++;
             }
         }
     }
@@ -50,3 +42,4 @@ public class CustomerDataManager implements DataManager {
             }
         }
     }
+}
