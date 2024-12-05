@@ -1,10 +1,8 @@
 package bcu.cmp5332.bookingsystem.main;
 
-import bcu.cmp5332.bookingsystem.commands.LoadGUI;
-import bcu.cmp5332.bookingsystem.commands.ListFlights;
-import bcu.cmp5332.bookingsystem.commands.AddFlight;
-import bcu.cmp5332.bookingsystem.commands.Command;
-import bcu.cmp5332.bookingsystem.commands.Help;
+import bcu.cmp5332.bookingsystem.commands.*;
+import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,82 +10,120 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class CommandParser {
-    
-    public static Command parse(String line) throws IOException, FlightBookingSystemException {
+
+    public static Command parse(String line) throws FlightBookingSystemException {
+        String[] parts = line.trim().split(" ", 2);
+        String cmd = parts[0].toLowerCase();
+
         try {
-            String[] parts = line.split(" ", 3);
-            String cmd = parts[0];
-
-            
-            if (cmd.equals("addflight")) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                System.out.print("Flight Number: ");
-                String flighNumber = reader.readLine();
-                System.out.print("Origin: ");
-                String origin = reader.readLine();
-                System.out.print("Destination: ");
-                String destination = reader.readLine();
-
-                LocalDate departureDate = parseDateWithAttempts(reader);
-
-                return new AddFlight(flighNumber, origin, destination, departureDate);
-            } else if (cmd.equals("addcustomer")) {
-                
-            } else if (cmd.equals("loadgui")) {
-                return new LoadGUI();
-            } else if (parts.length == 1) {
-                if (line.equals("listflights")) {
+            switch (cmd) {
+                case "addflight":
+                    return parseAddFlight();
+                case "addcustomer":
+                    return parseAddCustomer(parts);
+                case "addbooking":
+                    return parseAddBooking(parts);
+                case "cancelbooking":
+                    return parseCancelBooking(parts);
+                case "listflights":
                     return new ListFlights();
-                } else if (line.equals("listcustomers")) {
-                    
-                } else if (line.equals("help")) {
+                case "listcustomers":
+                    return new ListCustomers();
+                case "showflight":
+                    return parseShowFlight(parts);
+                case "showcustomer":
+                    return parseShowCustomer(parts);
+                case "loadgui":
+                    return new LoadGUI();
+                case "help":
                     return new Help();
-                }
-            } else if (parts.length == 2) {
-                int id = Integer.parseInt(parts[1]);
-
-                if (cmd.equals("showflight")) {
-                    
-                } else if (cmd.equals("showcustomer")) {
-                    
-                }
-            } else if (parts.length == 3) {
-                
-
-                if (cmd.equals("addbooking")) {
-                    
-                } else if (cmd.equals("editbooking")) {
-                    
-                } else if (cmd.equals("cancelbooking")) {
-                    
-                }
+                default:
+                    throw new FlightBookingSystemException("Unknown command: " + cmd);
             }
-        } catch (NumberFormatException ex) {
-
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
+            throw new FlightBookingSystemException("Invalid input format for command: " + cmd, ex);
         }
-
-        throw new FlightBookingSystemException("Invalid command.");
     }
-    
-    private static LocalDate parseDateWithAttempts(BufferedReader br, int attempts) throws IOException, FlightBookingSystemException {
-        if (attempts < 1) {
-            throw new IllegalArgumentException("Number of attempts should be higher that 0");
+
+    // Parses the 'addflight' command
+    private static Command parseAddFlight() throws IOException, FlightBookingSystemException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Flight Number: ");
+        String flightNumber = reader.readLine();
+        System.out.print("Origin: ");
+        String origin = reader.readLine();
+        System.out.print("Destination: ");
+        String destination = reader.readLine();
+        LocalDate departureDate = parseDateWithAttempts(reader, 3);
+
+        return new AddFlight(flightNumber, origin, destination, departureDate);
+    }
+
+    // Parses the 'addcustomer' command
+    private static Command parseAddCustomer(String[] parts) throws FlightBookingSystemException {
+        if (parts.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for addcustomer. Format: addcustomer [name] [phone]");
         }
+        String[] customerArgs = parts[1].split(" ", 2);
+        if (customerArgs.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for addcustomer. Format: addcustomer [name] [phone]");
+        }
+        return new AddCustomer(customerArgs[0], customerArgs[1]);
+    }
+
+    // Parses the 'addbooking' command
+    private static Command parseAddBooking(String[] parts) throws FlightBookingSystemException {
+        if (parts.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for addbooking. Format: addbooking [customerId] [flightId]");
+        }
+        String[] bookingArgs = parts[1].split(" ");
+        if (bookingArgs.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for addbooking. Format: addbooking [customerId] [flightId]");
+        }
+        return new AddBooking(Integer.parseInt(bookingArgs[0]), Integer.parseInt(bookingArgs[1]));
+    }
+
+    // Parses the 'cancelbooking' command
+    private static Command parseCancelBooking(String[] parts) throws FlightBookingSystemException {
+        if (parts.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for cancelbooking. Format: cancelbooking [customerId] [flightId]");
+        }
+        String[] bookingArgs = parts[1].split(" ");
+        if (bookingArgs.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for cancelbooking. Format: cancelbooking [customerId] [flightId]");
+        }
+        return new CancelBooking(Integer.parseInt(bookingArgs[0]), Integer.parseInt(bookingArgs[1]));
+    }
+
+    // Parses the 'showflight' command
+    private static Command parseShowFlight(String[] parts) throws FlightBookingSystemException {
+        if (parts.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for showflight. Format: showflight [flightId]");
+        }
+        int flightId = Integer.parseInt(parts[1]);
+        return new ShowFlight(flightId);
+    }
+
+    // Parses the 'showcustomer' command
+    private static Command parseShowCustomer(String[] parts) throws FlightBookingSystemException {
+        if (parts.length < 2) {
+            throw new FlightBookingSystemException("Invalid input for showcustomer. Format: showcustomer [customerId]");
+        }
+        int customerId = Integer.parseInt(parts[1]);
+        return new ShowCustomer(customerId);
+    }
+
+    // Parses a date with retry attempts
+    private static LocalDate parseDateWithAttempts(BufferedReader br, int attempts) throws IOException, FlightBookingSystemException {
         while (attempts > 0) {
             attempts--;
-            System.out.print("Departure Date (\"YYYY-MM-DD\" format): ");
+            System.out.print("Departure Date (YYYY-MM-DD): ");
             try {
-                LocalDate departureDate = LocalDate.parse(br.readLine());
-                return departureDate;
-            } catch (DateTimeParseException dtpe) {
-                System.out.println("Date must be in YYYY-MM-DD format. " + attempts + " attempts remaining...");
+                return LocalDate.parse(br.readLine());
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please try again. Attempts remaining: " + attempts);
             }
         }
-        
-        throw new FlightBookingSystemException("Incorrect departure date provided. Cannot create flight.");
-    }
-    
-    private static LocalDate parseDateWithAttempts(BufferedReader br) throws IOException, FlightBookingSystemException {
-        return parseDateWithAttempts(br, 3);
+        throw new FlightBookingSystemException("Failed to parse a valid departure date.");
     }
 }

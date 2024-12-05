@@ -1,51 +1,52 @@
 package bcu.cmp5332.bookingsystem.data;
 
 import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
-import bcu.cmp5332.bookingsystem.model.Flight;
+import bcu.cmp5332.bookingsystem.model.Customer;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
+import java.io.*;
 import java.util.Scanner;
 
 public class CustomerDataManager implements DataManager {
 
-    private final String RESOURCE = "./resources/data/customers.txt";
-    
+    private static final String RESOURCE = "./resources/data/customers.txt";
+
     @Override
     public void loadData(FlightBookingSystem fbs) throws IOException, FlightBookingSystemException {
-    	 try (Scanner sc = new Scanner(new File(RESOURCE))) {
-             int line_idx = 1;
-             while (sc.hasNextLine()) {
-                 String line = sc.nextLine();
-                 String[] properties = line.split(SEPARATOR, -1);
-                 try {
-                     int id = Integer.parseInt(properties[0]);
-                     String Customer = properties[1];
-                     String origin = properties[2];
-                     String destination = properties[3];
-                     LocalDate departureDate = LocalDate.parse(properties[4]);
-                     Customer flight = new Flight(id, Customer, origin, destination, departureDate);
-                     fbs.addCustomer(flight);
-                 } catch (NumberFormatException ex) {
-                     throw new FlightBookingSystemException("Unable to parse book id " + properties[0] + " on line " + line_idx
-                         + "\nError: " + ex);
-                 }
-                 line_idx++;
-             }
-    	 }
+        try (Scanner sc = new Scanner(new File(RESOURCE))) {
+            int lineIdx = 1;
+
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                String[] properties = line.split(SEPARATOR, -1);
+
+                try {
+                    if (properties.length < 3) {
+                        throw new FlightBookingSystemException("Malformed data on line " + lineIdx);
+                    }
+
+                    int id = Integer.parseInt(properties[0]);
+                    String name = properties[1];
+                    String phone = properties[2];
+
+                    Customer customer = new Customer(id, name, phone);
+                    fbs.addCustomer(customer);
+
+                } catch (NumberFormatException ex) {
+                    throw new FlightBookingSystemException("Invalid number format on line " + lineIdx + ": " + ex.getMessage());
+                }
+
+                lineIdx++;
+            }
+        }
     }
 
     @Override
     public void storeData(FlightBookingSystem fbs) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new File(RESOURCE))) {
-            for (Customer customer : fbs.getCustomer()) {
-                writer.println(
-                    customer.getId() + SEPARATOR +
-                    customer.getName() + SEPARATOR +
-                    customer.getPhone()
-                );
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(RESOURCE))) {
+            for (Customer customer : fbs.getCustomers()) {
+                writer.write(customer.getId() + SEPARATOR + customer.getName() + SEPARATOR + customer.getPhone());
+                writer.newLine();
             }
+        }
     }
-}

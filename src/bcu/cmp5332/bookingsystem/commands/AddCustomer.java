@@ -1,6 +1,7 @@
 package bcu.cmp5332.bookingsystem.commands;
 
 import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
+import bcu.cmp5332.bookingsystem.model.Customer;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
 public class AddCustomer implements Command {
@@ -14,11 +15,10 @@ public class AddCustomer implements Command {
     }
 
     @Override
-    public void execute(FlightBookingSystem flightBookingSystem) throws FlightBookingSystemException {
-
-        int newCustomerId = flightBookingSystem.getCustomer().size() + 1;
-        Customer newCustomer = new Customer(newCustomerId, name, phone);
-        flightBookingSystem.addCustomer(newCustomer);
-        System.out.printf("Customer added successfully: ID = %d, Name = %s, Phone = %s%n", newCustomerId, name, phone);
-            }
+    public void execute(FlightBookingSystem fbs) throws FlightBookingSystemException {
+        int newId = fbs.getCustomers().stream().mapToInt(Customer::getId).max().orElse(0) + 1;
+        Customer customer = new Customer(newId, name, phone);
+        fbs.addCustomer(customer);
+        System.out.println("Customer added: " + customer.getDetailsShort());
+    }
 }

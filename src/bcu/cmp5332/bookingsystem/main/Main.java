@@ -1,36 +1,51 @@
 package bcu.cmp5332.bookingsystem.main;
 
-import bcu.cmp5332.bookingsystem.data.FlightBookingSystemData;
 import bcu.cmp5332.bookingsystem.commands.Command;
+import bcu.cmp5332.bookingsystem.commands.LoadGUI;
+import bcu.cmp5332.bookingsystem.data.FlightBookingSystemData;
 import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, FlightBookingSystemException {
-        
-        FlightBookingSystem fbs = FlightBookingSystemData.load();
+    public static void main(String[] args) {
+        try {
+            // Load data into FlightBookingSystem
+            FlightBookingSystem fbs = FlightBookingSystemData.load();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("Flight Booking System");
+            System.out.println("Type 'help' for a list of commands.");
 
-        System.out.println("Flight Booking System");
-        System.out.println("Enter 'help' to see a list of available commands.");
-        while (true) {
-            System.out.print("> ");
-            String line = br.readLine();
-            if (line.equals("exit")) {
-                break;
+            // Read user input in a loop
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            while (true) {
+                System.out.print("> ");
+                String input = reader.readLine().trim();
+
+                if (input.equalsIgnoreCase("exit")) {
+                    FlightBookingSystemData.store(fbs);
+                    System.out.println("Data saved. Exiting program...");
+                    break;
+                }
+
+                try {
+                    // Parse and execute commands
+                    Command command = CommandParser.parse(input);
+
+                    // Special case for LoadGUI to prevent blocking
+                    if (command instanceof LoadGUI) {
+                        ((LoadGUI) command).execute(fbs);
+                    } else {
+                        command.execute(fbs);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
             }
-
-            try {
-                Command command = CommandParser.parse(line);
-                command.execute(fbs);
-            } catch (FlightBookingSystemException ex) {
-                System.out.println(ex.getMessage());
-            }
+        } catch (Exception e) {
+            System.err.println("An unexpected error occurred: " + e.getMessage());
         }
-        FlightBookingSystemData.store(fbs);
-        System.exit(0);
     }
 }

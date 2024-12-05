@@ -1,4 +1,3 @@
-
 package bcu.cmp5332.bookingsystem.commands;
 
 import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
@@ -20,22 +19,14 @@ public class AddBooking implements Command {
     }
 
     @Override
-    public void execute(FlightBookingSystem flightBookingSystem) throws FlightBookingSystemException {
-        Customer customer = flightBookingSystem.getCustomerById(customerId);
-        Flight flight = flightBookingSystem.getFlightById(flightId);
+    public void execute(FlightBookingSystem fbs) throws FlightBookingSystemException {
+        Customer customer = fbs.getCustomerById(customerId);
+        Flight flight = fbs.getFlightById(flightId);
 
-        if (flight.getPassengers().size() >= flight.getCapacity()) {
-            throw new FlightBookingSystemException("Flight is already fully booked.");
-        }
-
-        LocalDate bookingDate = flightBookingSystem.getSystemDate();
-        double flightPrice = flight.getPrice(); // Assuming Flight class has a getPrice method.
-        double rebookingFee = flightBookingSystem.calculateRebookingFee(flightPrice);
-
-        Booking booking = new Booking(customer, flight, bookingDate);
+        Booking booking = new Booking(customer, flight, fbs.getSystemDate());
         customer.addBooking(booking);
         flight.addPassenger(customer);
 
-        System.out.printf("Booking successfully created. A rebooking fee of £%.2f was applied.%n", rebookingFee);
+        System.out.println("Booking created: " + booking.getDetails());
     }
 }
