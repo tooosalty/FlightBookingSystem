@@ -5,52 +5,79 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
-    
+
     private int id;
     private String name;
     private String phone;
-    private final List<Booking> bookings = new ArrayList<>();
-    
-    // TODO: implement constructor here
-    
-    
-    // TODO: implementation of Getter and Setter methods
-    
-    
-    
-    public void addBooking(Booking booking) {
-        // TODO: implementation here
-    	for (Booking b : bookings) {
-    		b.getFlight().getId()
-    	}
-    	
+    private final List<Booking> bookings;
+
+    public Customer(int id, String name, String phone) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.bookings = new ArrayList<>();
     }
 
-	public int getId() {
-		return id;
-	}
+    // Getter for ID
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    // Setter for ID
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    // Getter for Name
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    // Setter for Name
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    // Getter for Phone
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    // Setter for Phone
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public List<Booking> getBookings() {
-		return bookings;
-	}
+    // Getter for Bookings
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    // Method to add a booking
+    public void addBooking(Booking booking) throws FlightBookingSystemException {
+        for (Booking b : bookings) {
+            if (b.getFlight().equals(booking.getFlight())) {
+                throw new FlightBookingSystemException("Customer already has a booking for this flight.");
+            }
+        }
+        bookings.add(booking);
+    }
+
+    // Method to cancel a booking for a specific flight
+    public void cancelBookingForFlight(Flight flight) throws FlightBookingSystemException {
+        boolean removed = bookings.removeIf(b -> b.getFlight().equals(flight));
+        if (!removed) {
+            throw new FlightBookingSystemException("No booking found for the given flight.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", bookings=" + bookings.size() +
+                '}';
+    }
 }

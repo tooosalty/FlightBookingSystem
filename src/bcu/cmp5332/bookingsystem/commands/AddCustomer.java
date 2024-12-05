@@ -15,6 +15,10 @@ public class AddCustomer implements Command {
 
     @Override
     public void execute(FlightBookingSystem flightBookingSystem) throws FlightBookingSystemException {
-        // TODO: implementation here
-    }
+
+        int newCustomerId = flightBookingSystem.getCustomer().size() + 1;
+        Customer newCustomer = new Customer(newCustomerId, name, phone);
+        flightBookingSystem.addCustomer(newCustomer);
+        System.out.printf("Customer added successfully: ID = %d, Name = %s, Phone = %s%n", newCustomerId, name, phone);
+            }
 }

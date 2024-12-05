@@ -11,12 +11,32 @@ public class BookingDataManager implements DataManager {
 
     @Override
     public void loadData(FlightBookingSystem fbs) throws IOException, FlightBookingSystemException {
-        // TODO: implementation here
+        BufferedReader br = new BufferedReader(new FileReader(BOOKINGS_FILE));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(SEPARATOR);
+            int customerId = Integer.parseInt(parts[0]);
+            int flightId = Integer.parseInt(parts[1]);
+            LocalDate bookingDate = LocalDate.parse(parts[2]);
+            Customer customer = fbs.getCustomerById(customerId);
+            Flight flight = fbs.getFlightById(flightId);
+            Booking booking = new Booking(customer, flight, bookingDate);
+            customer.addBooking(booking);
+            flight.addPassenger(customer);
+        }
+        br.close();
+    }
     }
 
     @Override
     public void storeData(FlightBookingSystem fbs) throws IOException {
-        // TODO: implementation here
+        BufferedWriter bw = new BufferedWriter(new FileWriter(BOOKINGS_FILE));
+        for (Customer customer : fbs.getCustomer()) {
+            for (Booking booking : customer.getBookings()) {
+                Flight flight = booking.getFlight();
+                bw.write(customer.getId() + SEPARATOR + flight.getId() + SEPARATOR + booking.getBookingDate());
+                bw.newLine();
+            }
+        }
+        bw.close();
     }
-    
-}

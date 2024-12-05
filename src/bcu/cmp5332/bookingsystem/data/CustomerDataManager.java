@@ -15,7 +15,6 @@ public class CustomerDataManager implements DataManager {
     
     @Override
     public void loadData(FlightBookingSystem fbs) throws IOException, FlightBookingSystemException {
-        // TODO: implementation here
     	 try (Scanner sc = new Scanner(new File(RESOURCE))) {
              int line_idx = 1;
              while (sc.hasNextLine()) {
@@ -40,6 +39,13 @@ public class CustomerDataManager implements DataManager {
 
     @Override
     public void storeData(FlightBookingSystem fbs) throws IOException {
-        // TODO: implementation here
+        try (PrintWriter writer = new PrintWriter(new File(RESOURCE))) {
+            for (Customer customer : fbs.getCustomer()) {
+                writer.println(
+                    customer.getId() + SEPARATOR +
+                    customer.getName() + SEPARATOR +
+                    customer.getPhone()
+                );
+            }
     }
 }

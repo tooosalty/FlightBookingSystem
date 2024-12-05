@@ -10,37 +10,47 @@ public class Booking {
     
 
     public Booking(Customer customer, Flight flight, LocalDate bookingDate) {
-        // TODO: implementation here
+        this.customer = customer;
+        this.flight = flight;
+        this.bookingDate = bookingDate;
     }
-	public Customer getCustomer() {
-		return customer;
-	}
+	
+	 // Getter for customer
+	 public Customer getCustomer() {
+        return customer;
+    }
 
+    // Setter for customer
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
+    // Getter for flight
+    public Flight getFlight() {
+        return flight;
+    }
 
+    // Setter for flight
+    public void setFlight(Flight flight) {
+        this.flight = flight;
+    }
 
-	public Flight getFlight() {
-		return flight;
-	}
+    // Getter for bookingDate
+    public LocalDate getBookingDate() {
+        return bookingDate;
+    }
 
+    // Setter for bookingDate
+    public void setBookingDate(LocalDate bookingDate) {
+        this.bookingDate = bookingDate;
+    }
 
-	public void setFlight(Flight flight) {
-		this.flight = flight;
-	}
-
-
-	public LocalDate getBookingDate() {
-		return bookingDate;
-	}
-
-
-	public void setBookingDate(LocalDate bookingDate) {
-		this.bookingDate = bookingDate;
-	}
-    
-    // TODO: implementation of Getter and Setter methods
-   
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "customer=" + customer.getName() +
+                ", flight=" + flight.getDetailsShort() +
+                ", bookingDate=" + bookingDate +
+                '}';
+    }
 }

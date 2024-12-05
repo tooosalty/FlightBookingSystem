@@ -79,13 +79,44 @@ public class Flight {
     }
 
     public String getDetailsLong() {
-        // TODO: implementation here
-    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY");
-    	
-        return null;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+        StringBuilder details = new StringBuilder();
+        details.append("Flight #").append(id).append("\n")
+                .append("Flight No: ").append(flightNumber).append("\n")
+                .append("Origin: ").append(origin).append("\n")
+                .append("Destination: ").append(destination).append("\n")
+                .append("Departure Date: ").append(departureDate.format(dtf)).append("\n")
+                .append("---------------------------\n")
+                .append("Passengers:\n");
+
+        for (Customer passenger : passengers) {
+            details.append("* Id: ").append(passenger.getId()).append(" - ")
+                    .append(passenger.getName()).append(" - ")
+                    .append(passenger.getPhone()).append("\n");
+        }
+
+        details.append(passengers.size()).append(" passenger(s)");
+        return details.toString();
+    }
+
+    
+    public void addPassenger(Customer passenger) throws FlightBookingSystemException {
+        if (passengers.contains(passenger)) {
+            throw new FlightBookingSystemException("Passenger is already on this flight.");
+        }
+        passengers.add(passenger);
+    }
+
+    public void removePassenger(Customer passenger) throws FlightBookingSystemException {
+        if (!passengers.contains(passenger)) {
+            throw new FlightBookingSystemException("Passenger is not on this flight.");
+        }
+        passengers.remove(passenger);
+    }
+                return null;
     }
     
     public void addPassenger(Customer passenger) {
         
     }
-}
+
