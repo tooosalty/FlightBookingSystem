@@ -28,8 +28,10 @@ public class FlightBookingSystem {
     }
 
     public Customer getCustomerByID(int id) throws FlightBookingSystemException {
-        // TODO: implementation here
-        return null;
+        public List<Customer> getCustomers() {
+            return new ArrayList<>(customers.values());
+        }
+                        return null;
     }
 
     public void addFlight(Flight flight) throws FlightBookingSystemException {
@@ -47,6 +49,11 @@ public class FlightBookingSystem {
     }
 
     public void addCustomer(Customer customer) {
-        // TODO: implementation here
+        public Customer getCustomerById(int id) throws FlightBookingSystemException {
+            if (!customers.containsKey(id)) {
+                throw new FlightBookingSystemException("Customer with ID " + id + " does not exist.");
+            }
+            return customers.get(id);
+        }
+                    }
     }
-}
