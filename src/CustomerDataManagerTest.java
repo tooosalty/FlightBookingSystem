@@ -1,14 +1,16 @@
-import bcu.cmp5332.bookingsystem.data.CustomerDataManager;
-import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import java.io.File;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
-public class CustomerDataManagerTest {
+import bcu.cmp5332.bookingsystem.data.CustomerDataManager;
+import bcu.cmp5332.bookingsystem.model.FlightBookingSystem;
 
-    @Test
+class CustomerDataManagerTest {
+
+	@Test
     public void testLoadAndStoreData() throws Exception {
         FlightBookingSystem fbs = new FlightBookingSystem();
         CustomerDataManager manager = new CustomerDataManager();

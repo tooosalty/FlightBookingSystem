@@ -1,15 +1,19 @@
-import bcu.cmp5332.bookingsystem.model.Flight;
-import bcu.cmp5332.bookingsystem.model.Customer;
-import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
-public class FlightTest {
+import bcu.cmp5332.bookingsystem.main.FlightBookingSystemException;
+import bcu.cmp5332.bookingsystem.model.Customer;
+import bcu.cmp5332.bookingsystem.model.Flight;
 
-    @Test
+class FlightTest {
+
+	@Test
     public void testAddPassenger() {
         Flight flight = new Flight(1, "LH123", "Birmingham", "Munich", LocalDate.now());
         Customer customer = new Customer(1, "Alice", "07712345678");
